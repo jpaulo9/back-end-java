@@ -10,6 +10,13 @@ import com.rest.api.model.Person;
 import com.rest.api.respository.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -28,6 +35,8 @@ public class PersonService {
 
     @Autowired
     PersonRepository repository;
+    @Autowired
+    PagedResourcesAssembler assembler;
 
     public PersonVO findById(Long id){
 
@@ -44,14 +53,24 @@ public class PersonService {
         return vo;
     }
 
-    public List<PersonVO> listPerson (){
+    public PagedModel<EntityModel<PersonVO>> listPerson (Pageable pageable){
         logger.info("List person");
 
-        var persons = DozerMapper.ListParseObject(repository.findAll(), PersonVO.class);
+        var personPage = repository.findAll(pageable);
 
-        persons.stream().forEach( p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
+        var personPageVO =
+        personPage.map(p -> DozerMapper.parseObject(p, PersonVO.class));
 
-        return persons;
+        personPageVO.map(
+                p -> p.add(linkTo(methodOn(PersonController.class)
+                        .findById(p.getKey())).withSelfRel()));
+
+        Link link = linkTo(methodOn(PersonController.class)
+                .getPersons(pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        "asc")).withSelfRel();
+
+        return assembler.toModel(personPageVO, link);
     }
 
 
