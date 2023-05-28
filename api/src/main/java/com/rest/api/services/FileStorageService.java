@@ -3,7 +3,10 @@ package com.rest.api.services;
 
 import com.rest.api.config.FileStorageConfig;
 import com.rest.api.exception.FileStorageException;
+import com.rest.api.exception.MyFileStorageException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +53,16 @@ public class FileStorageService {
         }
     }
 
+    public Resource loadFileResource(String fileName){
+        try{
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) return resource;
+            else throw new MyFileStorageException("File not Found");
+        } catch (Exception e) {
+            throw new MyFileStorageException("File Not Found "+fileName,e);
+        }
+    }
 
 
 }
