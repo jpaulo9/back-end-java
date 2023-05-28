@@ -3,7 +3,7 @@ server:
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000,http://basicapi.com.br
 file:
-  updload-dir: C:\code\UploadDir
+  upload-dir: /code/UploadDir
 security:
   jwt:
     token:
@@ -32,5 +32,4 @@ spring-doc:
     - /api/**/v1/**
   swagger-ui:
     use-root-path: true
-build-test:
-  machine: true
+

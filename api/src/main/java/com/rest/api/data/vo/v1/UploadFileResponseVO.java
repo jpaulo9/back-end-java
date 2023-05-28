@@ -1,18 +1,19 @@
 package com.rest.api.data.vo.v1;
 
 import java.io.Serializable;
-import java.util.Objects;
 
-public class FileUploadResponseVO implements Serializable {
+public class UploadFileResponseVO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String fileName;
     private String fileDownloadUri;
     private String fileType;
     private long fileSize;
 
-    public FileUploadResponseVO(){};
+    public UploadFileResponseVO(){};
 
-    public FileUploadResponseVO(String fileName, String fileDownloadUri, String fileType, long fileSize) {
+    public UploadFileResponseVO(String fileName, String fileDownloadUri, String fileType, long fileSize) {
         this.fileName = fileName;
         this.fileDownloadUri = fileDownloadUri;
         this.fileType = fileType;

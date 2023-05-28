@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "file",
+      "type": "com.rest.api.config.FileStorageConfig",
+      "sourceType": "com.rest.api.config.FileStorageConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "file.upload-dir",
+      "type": "java.lang.String",
+      "sourceType": "com.rest.api.config.FileStorageConfig"
+    }
+  ],
+  "hints": []
+}
