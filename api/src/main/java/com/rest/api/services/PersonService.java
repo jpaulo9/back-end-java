@@ -70,6 +70,25 @@ public class PersonService {
         return assembler.toModel(personPageVO, link);
     }
 
+    public PagedModel<EntityModel<PersonVO>> findPersonsByName (String firstName, Pageable pageable){
+        logger.info("List person");
+
+        var personPage = repository.findPersonsByName(firstName,pageable);
+
+        var personPageVO =
+                personPage.map(p -> DozerMapper.parseObject(p, PersonVO.class));
+
+        personPageVO.map(
+                p -> p.add(linkTo(methodOn(PersonController.class)
+                        .findById(p.getKey())).withSelfRel()));
+
+        Link link = linkTo(methodOn(PersonController.class)
+                .getPersons(pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        "asc")).withSelfRel();
+
+        return assembler.toModel(personPageVO, link);
+    }
 
     public PersonVO newPerson(PersonVO person) {
 
